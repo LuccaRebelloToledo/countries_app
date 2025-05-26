@@ -1,6 +1,6 @@
 # rest_countries
 
-A new Flutter project.
+Countries APP
 
 ## Getting Started
 
