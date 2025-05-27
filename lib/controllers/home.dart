@@ -4,14 +4,13 @@ import 'package:get/get.dart';
 import 'package:rest_countries/models/country.dart';
 import 'package:rest_countries/services/country.dart';
 
-
 class HomeController extends GetxController {
   final CountryService _countryService = CountryService();
 
   var allCountries = <Country>[].obs;
   var visibleCountries = <Country>[].obs;
   var isLoading = false.obs;
-  final int pageSize = 10;
+  final int pageSize = 15;
   int currentIndex = 0;
 
   final ScrollController scrollController = ScrollController();
@@ -46,10 +45,7 @@ class HomeController extends GetxController {
   }
 
   void loadMore() {
-    final nextItems = allCountries
-        .skip(currentIndex)
-        .take(pageSize)
-        .toList();
+    final nextItems = allCountries.skip(currentIndex).take(pageSize).toList();
 
     visibleCountries.addAll(nextItems);
     currentIndex += pageSize;
