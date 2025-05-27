@@ -11,7 +11,7 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Países'),
+        title: Center(child: Text('Países')),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(50),
           child: Padding(
@@ -51,7 +51,6 @@ class HomePage extends GetView<HomeController> {
             final country = controller.visibleCountries[index];
             return GestureDetector(
               onTap: () async {
-                // busca detalhada pelo nome e navega
                 try {
                   Get.dialog(
                     Center(child: CircularProgressIndicator()),
