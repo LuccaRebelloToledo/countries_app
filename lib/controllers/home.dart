@@ -5,7 +5,9 @@ import 'package:rest_countries/models/country.dart';
 import 'package:rest_countries/services/country.dart';
 
 class HomeController extends GetxController {
-  final CountryService _countryService = CountryService();
+  final CountryService _countryService;
+
+  HomeController(this._countryService);
 
   var allCountries = <Country>[].obs;
   var visibleCountries = <Country>[].obs;
@@ -22,13 +24,15 @@ class HomeController extends GetxController {
     scrollController.addListener(_onScroll);
   }
 
-  void fetchCountries() async {
+  Future<void> fetchCountries() async {
     try {
       isLoading(true);
       allCountries.value = await _countryService.getAll();
       loadMore();
     } catch (e) {
-      Get.snackbar('Erro', 'Não foi possível carregar os países');
+      if (!Get.testMode) {
+        Get.snackbar('Erro', 'Não foi possível carregar os países');
+      }
     } finally {
       isLoading(false);
     }
