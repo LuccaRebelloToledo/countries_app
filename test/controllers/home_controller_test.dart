@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:rest_countries/controllers/home.dart';
 import 'package:rest_countries/models/country.dart';
-import 'country_test.mocks.dart';
+import '../services/country_test.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
