@@ -7,15 +7,18 @@ import 'package:rest_countries/models/country.dart';
 import '../services/country_test.mocks.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  // Inicializa o binding necessário para testes com widgets e GetX.
+  TestWidgetsFlutterBinding.ensureInitialized(); // Sem isso, alguns recursos do Flutter/GetX não funcionam nos testes.
 
   late MockCountryService mockCountryService;
   late HomeController controller;
 
+  // Antes dos testes, criamos um novo mock e um novo controller.
   setUp(() {
     mockCountryService = MockCountryService();
     controller = HomeController(mockCountryService);
-    Get.testMode = true;
+    Get.testMode =
+        true; // Ativamos o modo de teste do GetX para evitar problemas com UI.
   });
 
   group('Cenário 01 | Listagem bem-sucedida', () {
@@ -54,10 +57,13 @@ void main() {
           googleMapsUrl: 'https://maps.google.com/?q=Argentina',
         ),
       ];
+
+      // Configuramos o método getAll do serviço para que a resposta seja a lista com os dados mockados.
       when(mockCountryService.getAll()).thenAnswer((_) async => countries);
 
       await controller.fetchCountries();
 
+      // Validações se a lista de países foi preenchida com os dados mockados.
       expect(controller.allCountries.isNotEmpty, true);
       expect(controller.allCountries.first.name, 'Brasil');
       expect(controller.allCountries.first.capital.first, 'Brasília');
@@ -67,8 +73,11 @@ void main() {
 
   group('Cenário 02 | Erro na requisição de países', () {
     test('A exceção é lançada corretamente', () async {
+      // Configuramos o método getAll do serviço para lançar um erro ao ser chamado.
       when(mockCountryService.getAll()).thenThrow(Exception('API fora do ar'));
       controller.fetchCountries();
+
+      // Verificamos se a lista de países está vazia para validarmos nosso erro mockado.
       expect(controller.allCountries.isEmpty, true);
     });
   });
@@ -93,11 +102,14 @@ void main() {
           },
           googleMapsUrl: 'https://maps.google.com/?q=Brazil',
         );
+
+        // Configuramos o método getByName do serviço para retornar o país específico mockado.
         when(
           mockCountryService.getByName('Brasil'),
         ).thenAnswer((_) async => country);
 
         final result = await controller.fetchCountryDetails('Brasil');
+        // Verificamos se o resultado correspondo com o país mockado.
         expect(result, isNotNull);
         expect(result.name, 'Brasil');
         expect(result.capital.first, 'Brasília');
@@ -108,9 +120,12 @@ void main() {
 
   group('Cenário 04 | Busca de país por nome com resultado vazio', () {
     test('Lança erro controlado ao buscar país inexistente', () async {
+      // Configuramos o método getByName do serviço para lançar uma exceção para quando um país não for encontrado, ou seja, Narnia.
       when(
         mockCountryService.getByName('Narnia'),
       ).thenThrow(Exception('País não encontrado'));
+
+      // Verificamos se a chamada ao método fetchCountryDetails lança uma exceção.
       expect(() => controller.fetchCountryDetails('Narnia'), throwsException);
     });
   });
@@ -131,8 +146,11 @@ void main() {
         currencies: null,
         googleMapsUrl: null,
       );
+      // Configuramos o método getAll do serviço para retornar o país mockado com dados incompletos.
       when(mockCountryService.getAll()).thenAnswer((_) async => [country]);
       await controller.fetchCountries();
+
+      // Verificamos se o país foi adicionado à lista de países e se os campos incompletos estão vazios, assim como está no dado mockado.
       expect(controller.allCountries.first.capital.isEmpty, true);
       expect(controller.allCountries.first.flag, '');
     });
@@ -140,8 +158,11 @@ void main() {
 
   group('Cenário 06 | Verificar chamada ao método', () {
     test('Método getAll() foi chamado', () async {
+      // Configuramos o método getAll do serviço para retornar uma lista vazia.
       when(mockCountryService.getAll()).thenAnswer((_) async => []);
       await controller.fetchCountries();
+
+      // Após chamar o método fetchCountries, verificamos se o método getAll foi chamado uma vez.
       verify(mockCountryService.getAll()).called(1);
     });
   });
