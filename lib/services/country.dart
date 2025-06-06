@@ -9,7 +9,7 @@ class CountryService {
 
   FutureOr<List<Country>> getAll() async {
     try {
-      final response = await _dio.get('/all');
+      final response = await _dio.get('/all?fields=name,flags');
 
       if (response.statusCode == 200) {
         return (response.data as List)
